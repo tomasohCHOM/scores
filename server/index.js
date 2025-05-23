@@ -19,10 +19,10 @@ wss.on("connection", (ws) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(JSON.stringify({ type: "update", counter }));
       }
-    })
-  })
+    });
+  });
 
   ws.on("close", () => {
     console.log("Client disconnected");
-  })
+  });
 });
