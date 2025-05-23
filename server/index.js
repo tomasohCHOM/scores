@@ -1,21 +1,28 @@
 import { WebSocket, WebSocketServer } from "ws";
 
 const wss = new WebSocketServer({ port: 8080 });
+let counter = 0;
 
 wss.on("connection", (ws) => {
-  console.log("Client Connected");
-  ws.send("Hello from the server");
+  console.log("Client connected");
+  ws.send(JSON.stringify({ type: "init", counter }));
+
   ws.on("message", (message) => {
-    console.log("Received this message:", message.toString());
-    // Echo the message back to all clients
+    const data = JSON.parse(message);
+    if (data.type === "increment") {
+      counter++;
+    } else if (data.type === "decrement") {
+      counter--;
+    }
+
     wss.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(message);
+        client.send(JSON.stringify({ type: "update", counter }));
       }
     })
   })
 
   ws.on("close", () => {
-    console.log("Connection Terminated")
+    console.log("Client disconnected");
   })
 });
