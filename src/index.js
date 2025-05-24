@@ -1,25 +1,79 @@
+// client.js
 const socket = new WebSocket("ws://localhost:8080");
 
-let counter = 0;
+let sessionId = null;
+let teams = [];
 
-const counterDisplay = document.createElement("h1");
-counterDisplay.textContent = `Counter: ${counter}`;
+const ui = {
+  sessionDisplay: document.createElement("h2"),
+  form: document.createElement("form"),
+  input: document.createElement("input"),
+  teamList: document.createElement("div"),
+};
 
-const incrementBtn = document.createElement("button");
-incrementBtn.textContent = "+";
-incrementBtn.onclick = () => socket.send(JSON.stringify({ type: "increment" }));
+ui.input.placeholder = "Team name";
+ui.form.appendChild(ui.input);
 
-const decrementBtn = document.createElement("button");
-decrementBtn.textContent = "−";
-decrementBtn.onclick = () => socket.send(JSON.stringify({ type: "decrement" }));
+document.body.append(ui.sessionDisplay, ui.form, ui.teamList);
 
-document.body.append(counterDisplay, incrementBtn, decrementBtn);
+ui.form.onsubmit = (e) => {
+  e.preventDefault();
+  const name = ui.input.value.trim();
+  if (name) {
+    socket.send(JSON.stringify({ type: "add-team", name }));
+    ui.input.value = "";
+  }
+};
+
+function renderTeams() {
+  ui.teamList.innerHTML = "";
+  for (const team of teams) {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <strong>${team.name}</strong>: ${team.score}
+      <button data-delta="1">+</button>
+      <button data-delta="-1">−</button>
+    `;
+
+    div.querySelectorAll("button").forEach((btn) => {
+      btn.onclick = () => {
+        const delta = parseInt(btn.dataset.delta, 10);
+        socket.send(JSON.stringify({ type: "update-score", teamName: team.name, delta }));
+      };
+    });
+
+    ui.teamList.appendChild(div);
+  }
+}
+
+socket.addEventListener("open", () => {
+  const urlParams = new URLSearchParams(location.search);
+  const joinId = urlParams.get("session");
+
+  if (joinId) {
+    socket.send(JSON.stringify({ type: "join-session", sessionId: joinId }));
+  } else {
+    socket.send(JSON.stringify({ type: "create-session" }));
+  }
+});
 
 socket.addEventListener("message", (event) => {
   const data = JSON.parse(event.data);
 
-  if (data.type === "init" || data.type === "update") {
-    counter = data.counter;
-    counterDisplay.textContent = `Counter: ${counter}`;
+  if (data.type === "session-created" || data.type === "session-joined") {
+    sessionId = data.sessionId;
+    teams = data.teams;
+    ui.sessionDisplay.textContent = `Session ID: ${sessionId}`;
+    renderTeams();
+  }
+
+  if (data.type === "sync") {
+    teams = data.teams;
+    renderTeams();
+  }
+
+  if (data.type === "error") {
+    alert(data.message);
   }
 });
+
