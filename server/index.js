@@ -6,15 +6,21 @@ const port = 8080;
 const wss = new WebSocketServer({ port });
 // Maps sessionId -> { joinCode, teams: [...], clients: Set<ws> }
 const sessions = new Map();
+const joinCodes = new Set();
 
 function createSession() {
   const id = randomUUID();
   // Make joinCode consisting of random characters frmo the set [A-Z, 0-9]
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let joinCode = "";
-  for (let i = 0; i < 5; ++i) {
-    joinCode += characters[Math.floor(Math.random() * chars.length)]
-  }
+
+  do {
+    for (let i = 0; i < 5; ++i) {
+      joinCode += chars[Math.floor(Math.random() * chars.length)]
+    }
+  } while (joinCode in joinCodes);
+
+  joinCodes.add(joinCode)
   sessions.set(id, { joinCode, teams: [], clients: new Set() });
   return id;
 }
@@ -35,7 +41,6 @@ function broadcast(session, message) {
 function handleMessage(sessionId, data) {
   const session = getSession(sessionId);
   if (!session) return;
-  console.log(sessions)
 
   switch (data.type) {
     case "add-team":
@@ -69,16 +74,14 @@ wss.on("connection", (ws) => {
 
     else if (data.type === "join-session") {
       const session = getSession(data.sessionId);
-      if (session) {
+      if (session && session.joinCode === data.joinCode) {
         session.clients.add(ws);
         currentSessionId = data.sessionId;
-
         ws.send(JSON.stringify({ type: "session-joined", sessionId: data.sessionId, teams: session.teams }));
       } else {
         ws.send(JSON.stringify({ type: "error", message: "Invalid session ID" }));
       }
     }
-
     else {
       handleMessage(currentSessionId, data);
     }
@@ -97,3 +100,4 @@ wss.on("connection", (ws) => {
 });
 
 console.log(`[INFO] Websocket server started on port ${port}`);
+
