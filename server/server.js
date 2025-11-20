@@ -1,4 +1,3 @@
-// server.js
 import { WebSocketServer, WebSocket } from "ws";
 import { randomUUID } from "crypto";
 
@@ -13,12 +12,12 @@ function createSession() {
   // Make joinCode consisting of random characters frmo the set [A-Z, 0-9]
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let joinCode = "";
-
   do {
+    joinCode = "";
     for (let i = 0; i < 5; ++i) {
       joinCode += chars[Math.floor(Math.random() * chars.length)]
     }
-  } while (joinCode in joinCodes);
+  } while (joinCodes.has(joinCode));
 
   joinCodes.add(joinCode)
   sessions.set(id, { joinCode, teams: [], clients: new Set() });
@@ -99,5 +98,11 @@ wss.on("connection", (ws) => {
   });
 });
 
-console.log(`[INFO] Websocket server started on port ${port}`);
+function main() {
+  const port = 8080;
+  const wss = new WebSocketServer({ port });
+  console.log(`[INFO] Websocket server started on port ${port}`);
+}
+
+main();
 
