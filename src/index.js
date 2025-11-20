@@ -20,7 +20,7 @@ ui.form.onsubmit = (e) => {
   e.preventDefault();
   const name = ui.input.value.trim();
   if (name) {
-    socket.send(JSON.stringify({ type: "add-team", name }));
+    socket.send(JSON.stringify({ type: "add-team", teamName: name }));
     ui.input.value = "";
   }
 };

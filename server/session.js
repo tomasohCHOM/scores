@@ -23,6 +23,7 @@ export class Session {
 export class SessionManager {
   constructor() {
     this.sessions = new Map(); // sessionId -> Session
+    this.sessionsByCode = new Map(); // joinCode -> Session
     this.joinCodes = new Set();
     this.codeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   }
@@ -49,8 +50,13 @@ export class SessionManager {
     const joinCode = this.generateJoinCode();
     const session = new Session(id, joinCode);
     this.sessions.set(id, session);
+    this.sessionsByCode.set(joinCode, session);
 
     return session;
+  }
+
+  getSessionByJoinCode(joinCode) {
+    this.sessionsByCode.get(joinCode) || null;
   }
 
   deleteSession(id) {
@@ -58,6 +64,7 @@ export class SessionManager {
     if (!session) return;
 
     this.joinCodes.delete(session.joinCode);
+    this.sessionsByCode.delete(session.joinCode);
     this.sessions.delete(id);
   }
 }
