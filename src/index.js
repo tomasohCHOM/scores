@@ -1,4 +1,3 @@
-// client.js
 const socket = new WebSocket("ws://localhost:8080");
 
 let sessionId = null;

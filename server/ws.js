@@ -18,6 +18,9 @@ export function registerHandlers(wss, sessionManager) {
         case "update-score":
           handleUpdateTeamScore(currentSession, data);
           break;
+        case "delete-team":
+          handleDeleteTeam(currentSession, data);
+          break;
       }
     });
 
@@ -83,10 +86,14 @@ function handleAddTeam(session, data) {
   broadcast(session, { type: "sync", teams: session.teams });
 }
 
-
 function handleUpdateTeamScore(session, data) {
   if (!session) return;
   session.updateScore(data.teamName, data.delta);
   broadcast(session, { type: "sync", teams: session.teams });
 }
 
+function handleDeleteTeam(session, data) {
+  if (!session) return;
+  session.deleteTeam(data.teamName);
+  broadcast(session, { type: "sync", teams: session.teams });
+}

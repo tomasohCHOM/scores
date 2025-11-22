@@ -9,7 +9,17 @@ export class Session {
   }
 
   addTeam(name) {
+    if (this.teams.some(team => team.name === name)) return;
     this.teams.push({ name, score: 0 });
+    return true;
+  }
+
+  deleteTeam(name) {
+    const team = this.teams.find(team => team.name === name);
+    if (!team) return;
+    const idx = this.teams.indexOf(team);
+    if (idx === -1) return;
+    this.teams.splice(idx, 1);
   }
 
   updateScore(teamName, delta) {
