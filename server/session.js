@@ -66,7 +66,7 @@ export class SessionManager {
   }
 
   getSessionByJoinCode(joinCode) {
-    this.sessionsByCode.get(joinCode) || null;
+    return this.sessionsByCode.get(joinCode) || null;
   }
 
   deleteSession(id) {

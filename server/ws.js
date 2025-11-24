@@ -10,7 +10,7 @@ export function registerHandlers(wss, sessionManager) {
           currentSession = handleCreateSession(ws, sessionManager);
           break;
         case "join-session":
-          currentSession = handleJoinSession(ws, data, sessionManager);
+          currentSession = handleJoinSession(ws, sessionManager, data);
           break;
         case "add-team":
           handleAddTeam(currentSession, data);
