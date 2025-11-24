@@ -4,30 +4,31 @@ let sessionId = null;
 let joinCode = null;
 let teams = [];
 
-const landingUI = document.createElement("div");
-landingUI.innerHTML = `
-  <button id="create-btn">Create Session</button>
+const app = document.getElementById("app");
 
-  <h3>Join Session</h3>
-  <input id="join-input" placeholder="ABCDE" maxlength="5">
-  <button id="join-btn">Join</button>
+const landingUI = document.createElement("div");
+landingUI.className = "landing-container";
+landingUI.innerHTML = `
+  <input id="join-input" placeholder="Session Code" maxlength="5">
+  <div class="landing-btns">
+    <button id="join-btn">Join</button>
+    <button id="create-btn">Create Session</button>
+  </div>
 `;
 
 const sessionUI = document.createElement("div");
 sessionUI.style.display = "none";
+sessionUI.className = "landing-container";
 sessionUI.innerHTML = `
-  <h2 id="session-title"></h2>
-  <h3 id="code-display"></h3>
-
+  <h2 id="code-display"></h2>
   <form id="team-form">
     <input id="team-input" placeholder="Team name">
     <button>Add Team</button>
   </form>
-
   <div id="team-list"></div>
 `;
 
-document.body.append(landingUI, sessionUI);
+app.append(landingUI, sessionUI);
 
 function showSessionUI() {
   landingUI.style.display = "none";

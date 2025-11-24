@@ -24,12 +24,137 @@ h6 {
 
 :root {
   font-family: "Ancizar Sans", sans-serif;
-  --color-background-1: 248, 248, 248;
-  --color-background-2: 240, 240, 240;
 
-  --color-foreground: 24, 25, 30;
-  --color-contrast: 153, 178, 221;
+  --color-background: 31, 39, 54;
+  --color-background-muted: 42, 49, 66;
+  --color-foreground: 230, 233, 240;
+  --color-contrast: 144, 179, 240;
 
-  background-color: rgb(var(--color-background-1));
+  background-color: rgb(var(--color-background));
   color: rgb(var(--color-foreground));
+  color-scheme: dark;
+}
+
+#app {
+  max-width: 480px;
+  margin-inline: auto;
+  padding: 4rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+}
+
+h1 {
+  line-height: 1;
+  text-align: center;
+}
+
+button {
+  cursor: pointer;
+  outline: none;
+  border: none;
+}
+
+.landing-container {
+  display: grid;
+  gap: 2rem;
+}
+
+#join-input,
+.landing-btns>button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+}
+
+.landing-container>.landing-btns {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+#join-input {
+  border: none;
+  outline: none;
+  background-color: rgb(var(--color-background-muted));
+}
+
+#join-btn {
+  background-color: rgb(var(--color-contrast));
+}
+
+#create-btn {
+  background-color: transparent;
+  border: 1px solid rgb(var(--color-contrast));
+}
+
+#code-display {
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+  color: rgb(var(--color-contrast));
+}
+
+#code-display {
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+  color: rgb(var(--color-contrast));
+}
+
+#team-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-block: 1rem;
+}
+
+#team-input {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  background-color: rgb(var(--color-background-muted));
+  border-radius: 0.25rem;
+  border: none;
+  outline: none;
+}
+
+#team-form button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  background-color: rgb(var(--color-contrast));
+  color: black;
+  font-weight: 600;
+}
+
+#team-list {
+  display: grid;
+  gap: 1rem;
+}
+
+#team-list>div {
+  padding: 1rem;
+  background-color: rgb(var(--color-background-muted));
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+#team-list strong {
+  margin-right: auto;
+}
+
+.score-btn {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  background-color: rgb(var(--color-contrast));
+  color: black;
+  font-weight: 700;
+}
+
+#remove-btn {
+  background-color: transparent;
+  border: 1px solid rgb(var(--color-contrast));
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
 }
