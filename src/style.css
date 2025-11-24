@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Ancizar+Sans:ital,wght@0,100..1000;1,100..1000&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Ancizar+Sans:ital,wght@0,100..1000;1,100..1000&display=swap");
 
 *,
 *::before,
@@ -31,5 +31,5 @@ h6 {
   --color-contrast: 153, 178, 221;
 
   background-color: rgb(var(--color-background-1));
-  color: rgb(var(--color-foreground))
+  color: rgb(var(--color-foreground));
 }

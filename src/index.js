@@ -42,18 +42,31 @@ function renderTeams() {
     const teamDiv = document.createElement("div");
     teamDiv.innerHTML = `
       <strong>${team.name}</strong>: ${team.score}
-      <button data-delta="1">+</button>
-      <button data-delta="-1">−</button>
+      <button class="score-btn" data-delta="1">+</button>
+      <button class="score-btn" data-delta="-1">−</button>
+      <button id="remove-btn">Remove Team</button>
     `;
-    teamDiv.querySelectorAll("button").forEach((btn) => {
+
+    teamDiv.querySelectorAll(".score-btn").forEach((btn) => {
       btn.onclick = () => {
-        socket.send(JSON.stringify({
-          type: "update-score",
-          teamName: team.name,
-          delta: parseInt(btn.dataset.delta, 10),
-        }));
+        socket.send(
+          JSON.stringify({
+            type: "update-score",
+            teamName: team.name,
+            delta: parseInt(btn.dataset.delta, 10),
+          })
+        );
       };
     });
+
+    teamDiv.querySelector("#remove-btn").onclick = () => {
+      socket.send(
+        JSON.stringify({
+          type: "delete-team",
+          teamName: team.name,
+        })
+      );
+    };
 
     list.appendChild(teamDiv);
   }
@@ -80,7 +93,8 @@ socket.addEventListener("message", (event) => {
     history.replaceState({}, "", `?code=${joinCode}`);
 
     showSessionUI();
-    document.querySelector("#code-display").textContent = `Join Code: ${joinCode}`;
+    document.querySelector("#code-display").textContent =
+      `Join Code: ${joinCode}`;
     renderTeams();
   }
 
@@ -89,7 +103,8 @@ socket.addEventListener("message", (event) => {
     teams = data.teams;
 
     showSessionUI();
-    document.querySelector("#code-display").textContent = `Join Code: ${joinCode}`;
+    document.querySelector("#code-display").textContent =
+      `Join Code: ${joinCode}`;
     renderTeams();
   }
 
@@ -102,7 +117,7 @@ socket.addEventListener("message", (event) => {
     history.replaceState({}, "", "/");
     alert(data.message);
   }
-})
+});
 
 document.querySelector("#create-btn").onclick = () => {
   socket.send(JSON.stringify({ type: "create-session" }));
@@ -124,4 +139,4 @@ document.querySelector("#team-form").onsubmit = (e) => {
     socket.send(JSON.stringify({ type: "add-team", teamName: name }));
     input.value = "";
   }
-}
+};

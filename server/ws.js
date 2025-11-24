@@ -48,34 +48,40 @@ function handleCreateSession(ws, sessionManager) {
   const session = sessionManager.createSession();
   session.clients.add(ws);
 
-  ws.send(JSON.stringify({
-    type: "session-created",
-    sessionId: session.id,
-    joinCode: session.joinCode,
-    teams: session.teams,
-  }))
+  ws.send(
+    JSON.stringify({
+      type: "session-created",
+      sessionId: session.id,
+      joinCode: session.joinCode,
+      teams: session.teams,
+    })
+  );
 
   return session;
 }
 
 function handleJoinSession(ws, sessionManager, data) {
-  const session = sessionManager.getSessionByJoinCode(data.joinCode)
+  const session = sessionManager.getSessionByJoinCode(data.joinCode);
 
   if (!session) {
-    ws.send(JSON.stringify({
-      type: "error",
-      message: "Invalid join code.",
-    }));
+    ws.send(
+      JSON.stringify({
+        type: "error",
+        message: "Invalid join code.",
+      })
+    );
     return null;
   }
 
   session.clients.add(ws);
 
-  ws.send(JSON.stringify({
-    type: "session-joined",
-    sessionId: session.id,
-    teams: session.teams,
-  }))
+  ws.send(
+    JSON.stringify({
+      type: "session-joined",
+      sessionId: session.id,
+      teams: session.teams,
+    })
+  );
 
   return session;
 }

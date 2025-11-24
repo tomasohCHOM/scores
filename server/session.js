@@ -9,13 +9,13 @@ export class Session {
   }
 
   addTeam(name) {
-    if (this.teams.some(team => team.name === name)) return;
+    if (this.teams.some((team) => team.name === name)) return;
     this.teams.push({ name, score: 0 });
     return true;
   }
 
   deleteTeam(name) {
-    const team = this.teams.find(team => team.name === name);
+    const team = this.teams.find((team) => team.name === name);
     if (!team) return;
     const idx = this.teams.indexOf(team);
     if (idx === -1) return;
@@ -47,9 +47,10 @@ export class SessionManager {
     do {
       joinCode = "";
       for (let i = 0; i < 5; i++) {
-        joinCode += this.codeChars[Math.floor(Math.random() * this.codeChars.length)];
+        joinCode +=
+          this.codeChars[Math.floor(Math.random() * this.codeChars.length)];
       }
-    } while (this.joinCodes.has(joinCode))
+    } while (this.joinCodes.has(joinCode));
 
     this.joinCodes.add(joinCode);
     return joinCode;
